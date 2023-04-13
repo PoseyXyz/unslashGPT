@@ -123,7 +123,7 @@ export default function Home() {
               </div>
               <div className="overflow-scroll max-h-[20vh] absolute w-full"> {
                 searchString === '' ? null :
-                  <div className="flex flex-col gap-1 items-start border-gray-400 border w-full border-t-0">
+                  <div className="flex flex-col gap-1 items-start bg-white border-gray-400 border w-full border-t-0">
 
                     {tempItemArray.map((item: string, index: number) => {
                       return (
@@ -155,7 +155,7 @@ export default function Home() {
                 <h3 className='text-xl'>GPT Suggested Keywords</h3>
                 <div className='flex flex-wrap gap-4'>
                   <>
-                    {generatedKeywords.map(keyword => (<button key={keyword}>{keyword}</button>))}
+                    {generatedKeywords.map(keyword => (<button className='underline text-lg text-blue-500 hover:text-blue-700 duration-500' key={keyword}>{keyword}</button>))}
 
                   </>
                 </div>
