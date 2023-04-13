@@ -3,9 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   typescript:{
     ignoreBuildErrors:true
-  }, 
-  images:{
-    domains:['oaidalleapiprodscus.blob.core.windows.net']
   }
 }
 
