@@ -7,6 +7,9 @@ import { IoIosClose } from 'react-icons/io'
 import { FaSearch } from 'react-icons/fa'
 
 
+const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY
+
+
 
 export default function Home() {
 
@@ -17,8 +20,8 @@ export default function Home() {
   const [tempItemArray, setTempItemArray] = useState(keyArray)
   const [searchString, setSearchString] = useState<string>('')
 
-  
 
+  const [generatedKeywords, setGeneratedKeywords] = useState([])
 
 
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,47 +48,44 @@ export default function Home() {
   //   .catch((error)=>console.log(error))
   // }, [])
 
- 
-
-  // useEffect(() => {
-  //   function airequestsender() {
-
-  //     const configuration = new Configuration({
-  //       organization: "org-yl3HActUjHpuNqtN5N4uoGRU",
-  //       apiKey: "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",
-  //     });
-  //     const openai = new OpenAIApi(configuration);
-
-  //     async function runCompletion() {
-
-  //       let tempObject = ''
-  //       try {
-
-  //         const completion = await openai.createChatCompletion({
-  //           model: "gpt-3.5-turbo",
-  //           messages: [
-  //             { role: "user", content: `Suggest 10 search query texts for the Unsplash API to find images for the "header" section of a barber shop website. Return the search queries in a JSON array.` },
-  //           ],
-  //           max_tokens: 4000,
-  //           temperature: 1.1
-  //         });
-  //         tempObject = completion.data.choices[0].message.content
-
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-
-  //       console.log(typeof(JSON.parse(tempObject)));
-  //       return tempObject
-  //     }
-  //     runCompletion()
-  //   }
-
-  //   airequestsender()
 
 
-  // }, [])
- 
+  
+    function airequestsender(gmb_key) {
+
+      const configuration = new Configuration({
+        organization: "org-yl3HActUjHpuNqtN5N4uoGRU",
+        apiKey: OPENAI_API_KEY,
+      });
+      const openai = new OpenAIApi(configuration);
+
+      async function runCompletion() {
+
+        let tempObject = []
+        try {
+
+          const completion = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "user", content: `Suggest 10 search query texts for the Unsplash API to find images for the "header" section of a ${gmb_key} website. Return the search queries in a JSON array.` },
+            ],
+            max_tokens: 4000,
+            temperature: 1.1
+          });
+          tempObject = completion.data.choices[0].message.content
+
+        } catch (error) {
+          console.log(error);
+        }
+
+        setGeneratedKeywords(JSON.parse(tempObject.replace(/^"(.*)"$/, '$1')))
+      
+      }
+      runCompletion()
+    }
+
+  
+
   return (
     <main className="grid grid-cols-3 min-h-screen">
       {/* <select className='bg-red-500' value={selectedKey} onChange={(e) => setSelectedKey(e.target.value)} name="" id="">
@@ -136,7 +136,7 @@ export default function Home() {
             </article>
 
 
-            <button className='bg-[#D9D9D9] p-4 text-xl cursor-pointer'><FaSearch /></button>
+            <button className='bg-[#D9D9D9] p-4 text-xl cursor-pointer' onClick={()=>airequestsender(selectedKey)}><FaSearch /></button>
 
           </div>
 
@@ -145,20 +145,29 @@ export default function Home() {
 
         <hr className='w-full' />
 
-        <div className='flex gap-6 flex-col'>
+        <>
+          {
+            generatedKeywords.length === 0
+              ?
+              <></>
+              :
+              <div className='flex gap-6 flex-col'>
+                <h3 className='text-xl'>GPT Suggested Keywords</h3>
+                <div className='flex flex-wrap gap-4'>
+                  <>
+                    {generatedKeywords.map(keyword => (<button key={keyword}>{keyword}</button>))}
 
-          <h3 className='text-xl'>GPT Suggested Keywords</h3>
+                  </>
+                </div>
+              </div>
+          }
 
-          <div className='flex flex-wrap gap-4'>
-              <a href="https://unsplash.com">Sample link</a>
-              <a href="">Sample link</a>
-              <a href="">Sample link</a>
-              <a href="">Sample link</a>
-              <a href="">Sample link</a>
-              <a href="">Sample link</a>
-              <a href="">Sample link</a>
-          </div>
-        </div>
+
+
+
+
+
+        </>
 
       </section>
 
