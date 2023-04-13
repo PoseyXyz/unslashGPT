@@ -78,7 +78,7 @@ export default function Home() {
           console.log(error);
         }
 
-        setGeneratedKeywords(JSON.parse(tempObject.replace(/^"(.*)"$/, '$1')))
+        setGeneratedKeywords(JSON.parse(tempObject.toString().replace(/^"(.*)"$/, '$1')))
       
       }
       runCompletion()
