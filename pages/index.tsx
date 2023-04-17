@@ -23,6 +23,8 @@ export default function Home() {
 
   const [generatedKeywords, setGeneratedKeywords] = useState([])
 
+  const [loading, setLoading] = useState(false)
+
 
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -60,6 +62,7 @@ export default function Home() {
       const openai = new OpenAIApi(configuration);
 
       async function runCompletion() {
+        setLoading(true)
 
         let tempObject = []
         try {
@@ -72,12 +75,13 @@ export default function Home() {
             max_tokens: 4000,
             temperature: 1.1
           });
+          
           tempObject = completion.data.choices[0].message.content
 
         } catch (error) {
           console.log(error);
         }
-
+        setLoading(false)
         setGeneratedKeywords(JSON.parse(tempObject.toString().replace(/^"(.*)"$/, '$1')))
       
       }
@@ -116,7 +120,7 @@ export default function Home() {
                 {
                   selectedKey === '' ? <input value={searchString} onChange={(e) => { onFormChange(e) }} className={`flex-auto hover:bg-gray-100 p-4 border-0 outline-none text-black`} placeholder='E.g. "Sushi restaurant" or "Hairdresser"' />
                     :
-                    <button onClick={() => setSelectedKey('')} className="bg-[#EAEAEA] m-3 border-2 border-[#69AF24] py-3 px-5 flex justify-between min-w-[23%] items-center">{selectedKey} <i className="text-xl"><IoIosClose /></i></button>
+                    <button onClick={() => {setSelectedKey(''); setGeneratedKeywords([])}} className="bg-[#EAEAEA] m-3 border-2 border-[#69AF24] py-3 px-5 flex justify-between min-w-[23%] items-center">{selectedKey} <i className="text-xl"><IoIosClose /></i></button>
                 }
                 {/* <div className="self-center px-4 flex-auto bg-gray-200 rounded-2xl">{selected}</div>  */}
 
@@ -144,7 +148,12 @@ export default function Home() {
         </div>
 
         <hr className='w-full' />
+              
+        {
+          loading ? <h1 className='text-red-500'>Generating keyword results...</h1>
+          :
 
+        <article>
         <>
           {
             generatedKeywords.length === 0
@@ -163,6 +172,11 @@ export default function Home() {
           }
 
         </>
+        </article>
+        }
+
+
+      
 
       </section>
 
