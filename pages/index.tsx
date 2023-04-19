@@ -195,14 +195,14 @@ export default function Home() {
         <div className='grid grid-cols-4 gap-4'>
           {
             imageResults ? imageResults.map(result => (
-              <div key={result.id} className='relative bg-red-500 overflow-hidden'>
+              <div key={result.id} className='relative overflow-hidden'>
                 {/* <Image
                   alt="The guitarist in the concert."
                   src={result.urls.raw}
                   
                   className='object-cover top-0 left-0 absolute'
                 /> */}
-                <img src={result.urls.raw} className='w-full object-cover h-[400px]' alt="The guitarist in the concert." />
+                <img src={result.urls.thumb} className='' alt="The guitarist in the concert." />
               </div>
             )) : <></>
           }
