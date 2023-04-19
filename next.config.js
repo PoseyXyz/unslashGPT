@@ -5,7 +5,7 @@ const nextConfig = {
     ignoreBuildErrors:true
   }, 
   images:{
-    domains:['oaidalleapiprodscus.blob.core.windows.net']
+    domains:['oaidalleapiprodscus.blob.core.windows.net', 'images.unsplash.com']
   }
 }
 
