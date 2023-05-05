@@ -160,6 +160,9 @@ export default function Home() {
 
         <hr className='w-full' />
 
+        <input placeholder='Editable'/>
+        <button>Submit</button>
+
         {
           loading ? <h1 className='text-red-500'>Generating keyword results...</h1>
             :
