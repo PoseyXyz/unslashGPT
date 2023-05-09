@@ -25,6 +25,17 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false)
 
+  const [editable, setEditable] = useState('')
+
+  useEffect(() => {
+    console.log(editable);
+  }, [editable])
+
+  const onEditableFormChange = (e: ChangeEvent<HTMLInputElement>) => {
+
+    setEditable(e.target.value)
+  }
+
 
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -160,8 +171,10 @@ export default function Home() {
 
         <hr className='w-full' />
 
-        <input placeholder='Editable'/>
-        <button>Submit</button>
+        <div className='flex flex-col gap-3'>
+          <input placeholder='Editable' value={editable} onChange={onEditableFormChange} className='border-b-2 border-black p-3' />
+          <button className='bg-[#EAEAEA] p-3' onClick={() => { triggerImageLoad(editable); }}>Find</button>
+        </div>
 
         {
           loading ? <h1 className='text-red-500'>Generating keyword results...</h1>
@@ -178,7 +191,7 @@ export default function Home() {
                       <h3 className='text-xl'>GPT Suggested Keywords</h3>
                       <div className='flex flex-wrap gap-4'>
                         <>
-                          {generatedKeywords.map(keyword => (<button className='underline text-lg text-blue-500 hover:text-blue-700 duration-500' onClick={() => triggerImageLoad(keyword)} key={keyword}>{keyword}</button>))}
+                          {generatedKeywords.map(keyword => (<button className='underline text-lg text-blue-500 hover:text-blue-700 duration-500' onClick={() => { triggerImageLoad(keyword); setEditable(keyword) }} key={keyword}>{keyword}</button>))}
 
                         </>
                       </div>
@@ -195,17 +208,22 @@ export default function Home() {
       </section>
 
       <section className='col col-span-2 bg-gray-400' >
-        <div className='grid grid-cols-4 gap-4'>
+        <div className='grid grid-cols-4 gap-2'>
           {
             imageResults ? imageResults.map(result => (
-              <div key={result.id} className='relative overflow-hidden'>
+              <div key={result.id} className='relative bg-gray-100 p-4 flex flex-col gap-2 justify-between items-center overflow-hidden'>
                 {/* <Image
                   alt="The guitarist in the concert."
                   src={result.urls.raw}
                   
                   className='object-cover top-0 left-0 absolute'
                 /> */}
-                <img src={result.urls.thumb} className='' alt="The guitarist in the concert." />
+                <img src={result.urls.thumb} className='' alt={result.alt_description} />
+
+                <div className='flex justify-between w-full'>
+                  <span className='flex gap-1'><span>{result.user.first_name}</span><span>{result.user.last_name}</span></span>
+                  <a href={result.links.html} target='_blank' className='text-blue-400 hover:text-blue-600' >Unsplash</a>
+                </div>
               </div>
             )) : <></>
           }
